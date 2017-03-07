@@ -1,0 +1,43 @@
+version: '2'
+networks:
+  mjolnir:
+    driver: bridge
+services:
+  mjolnir:
+    image: mjolnir
+    build: ./mjolnir
+    depends_on:
+      - rabbitmq
+    ports:
+      - "6000:6000"
+    networks:
+      - mjolnir
+  relevancy:
+    image: relevancy
+    build: ./relevancy
+    depends_on:
+      - rabbitmq
+    networks:
+      - mjolnir
+  quad:
+    image: quad
+    build: ./quad
+    depends_on:
+      - rabbitmq
+    networks:
+      - mjolnir
+  collector:
+    image: collector
+    build: ./collector
+    depends_on:
+      - rabbitmq
+    networks:
+      - mjolnir
+    volumes:
+      - ./data:/src/data
+  rabbitmq:
+    image: rabbitmq:alpine
+    expose:
+      - "5672"
+    networks:
+      - mjolnir

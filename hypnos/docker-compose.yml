@@ -1,0 +1,20 @@
+version: '2'
+networks:
+  mjolnir_mjolnir:
+    external: true
+services:
+  hypnos:
+    image: hypnos
+    build: .
+    ports:
+        - "5002:5002"
+    networks:
+        - mjolnir_mjolnir
+  ccnlp:
+    image: caerusassociates/ccnlp:1.0.0
+    networks:
+        - mjolnir_mjolnir
+  petrarch:
+    build: petrarch/.
+    networks:
+        - mjolnir_mjolnir
