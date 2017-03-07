@@ -20,8 +20,7 @@ Services
 
 The services defined in this project are as follows:
 
-* `relevancy` - An SVM classifier to determine story relevancy based on the
-* story title.
+* `relevancy` - An SVM classifier to determine story relevancy based on the story title.
 * `quad` - A convolutional neural net to classify a sentence into one of four `QuadCategories`: verbal conflict, verbal cooperation, material conflict, material cooperation.
 * `hypnos` - Rule-based event extractor. Used primarily for actor extraction in this setup.
 * `collector` - Light process to pull in events and write them out to a file.
