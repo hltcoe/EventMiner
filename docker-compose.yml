@@ -1,38 +1,38 @@
 version: '2'
 networks:
-  mjolnir:
+  miner:
     driver: bridge
 services:
-  mjolnir:
-    image: mjolnir
-    build: ./mjolnir
+  miner:
+    image: miner
+    build: ./miner
     depends_on:
       - rabbitmq
     ports:
       - "6000:6000"
     networks:
-      - mjolnir
+      - miner
   relevancy:
     image: relevancy
     build: ./relevancy
     depends_on:
       - rabbitmq
     networks:
-      - mjolnir
+      - miner
   quad:
     image: quad
     build: ./quad
     depends_on:
       - rabbitmq
     networks:
-      - mjolnir
+      - miner
   collector:
     image: collector
     build: ./collector
     depends_on:
       - rabbitmq
     networks:
-      - mjolnir
+      - miner
     volumes:
       - ./data:/src/data
   rabbitmq:
@@ -40,4 +40,4 @@ services:
     expose:
       - "5672"
     networks:
-      - mjolnir
+      - miner

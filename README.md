@@ -1,4 +1,4 @@
-mjolnir
+EventMiner
 =======
 
 Using the hammer of supervised learning to make events.
@@ -6,7 +6,7 @@ Using the hammer of supervised learning to make events.
 About
 -----
 
-Mjolnir aims to serve, primarily, as an interface to various NLP analytics
+EventMiner aims to serve, primarily, as an interface to various NLP analytics
 to extract event information from text. This project is setup with a REST
 frontend interface, which accepts text input, that is then further passed
 via a RabbitMQ messaging queue to various analytics as appropriate. The project
@@ -29,11 +29,11 @@ Deployment
 ----------
 
 There are two `docker-compose` projects that make up mjolnir. The first is the
-`mjolnir` application itself. The second is `hypnos`, which is the container
+`miner` application itself. The second is `hypnos`, which is the container
 architecture around the `PETRARCH2` event extractor. `docker-compose` must be
-run for `mjolnir` first, and `hypnos` second, due to nuances relating to the
+run for `miner` first, and `hypnos` second, due to nuances relating to the
 shared docker networks. Thus, deployment is as follows (assuming the user
-starts in the top-level `mjolnir` directory):
+starts in the top-level `EventMiner` directory):
 
 ```
 docker-compose up -d 
@@ -43,11 +43,11 @@ docker-compose up -d
 
 This will lead to a REST interface deployed on port 6000. With the features
 of `docker-compose`, it's possible to arbitrarily scale up the various services
-connected within `mjolnir`. For example, the `quad` service is rather slow
+connected within `miner`. For example, the `quad` service is rather slow
 since it's a neural net running on a CPU. Since each service consumes from a
 messaging queue, we don't need to worry about things such as load balancing;
 each service just consumes when it's ready. Given this, to scale the `quad`
-service is as simple as (assuming the user is in the root `mjolnir` directory):
+service is as simple as (assuming the user is in the root `EventMiner` directory):
 
 ```
 docker-compose scale quad=3
@@ -69,12 +69,12 @@ headers = {'Content-Type': 'application/json'}
 test = {'title': 'Syrian rebels attacked Aleppo.', 'content': 'This is the content. Rebels attacked Aleppo.'}
 data = {'data': test}
 
-r = requests.post('http://localhost:6000/mjolnir', data=json.dumps(data), headers=headers)
+r = requests.post('http://localhost:6000/EventMiner', data=json.dumps(data), headers=headers)
 ```
 
-The response object from `mjolnir` will contain a unique ID for the input data
+The response object from `EventMiner` will contain a unique ID for the input data
 that allows the user to trace the progress of the content throughout the
-pipeline. The pipeline will write data out to the `mjolnir/data` directory. The
+pipeline. The pipeline will write data out to the `EventMiner/data` directory. The
 results are in a file titled `events.YYYYMMDD.txt` with one JSON record per
 line. The output format (for now...) is as follows:
 

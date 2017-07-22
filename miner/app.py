@@ -31,7 +31,7 @@ def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 
 
-class MjolnirAPI(Resource):
+class MinerAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('data', type=dict, location='json')
@@ -56,7 +56,7 @@ class MjolnirAPI(Resource):
         return pipeline_key
 
 
-api.add_resource(MjolnirAPI, '/mjolnir')
+api.add_resource(MinerAPI, '/EventMiner')
 
 
 if __name__ == '__main__':
