@@ -12,6 +12,13 @@ services:
       - "6000:6000"
     networks:
       - miner
+  mitie:
+    image: mitie
+    build: ./mitie
+    depends_on:
+      - rabbitmq
+    networks:
+      - miner
   relevancy:
     image: relevancy
     build: ./relevancy

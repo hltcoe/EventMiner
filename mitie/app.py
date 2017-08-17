@@ -65,6 +65,5 @@ def main():
 
 
 if __name__ == '__main__':
-    args = utils.parse_arguments()
     logger.info('Running...')
     main()
