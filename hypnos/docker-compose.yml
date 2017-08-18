@@ -1,6 +1,6 @@
 version: '2'
 networks:
-  mjolnir_mjolnir:
+  eventminer_miner:
     external: true
 services:
   hypnos:
@@ -9,12 +9,12 @@ services:
     ports:
         - "5002:5002"
     networks:
-        - mjolnir_mjolnir
+        - eventminer_miner
   ccnlp:
     image: caerusassociates/ccnlp:1.0.0
     networks:
-        - mjolnir_mjolnir
+        - eventminer_miner
   petrarch:
     build: petrarch/.
     networks:
-        - mjolnir_mjolnir
+        - eventminer_miner

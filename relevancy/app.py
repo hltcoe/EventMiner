@@ -41,7 +41,7 @@ def main():
     time.sleep(30)
     logger.info('... done ...')
 
-    consume = 'ingest'
+    consume = 'mitie'
     rabbit_consume = utils.RabbitClient(queue=consume,
                                         host='rabbitmq')
 
