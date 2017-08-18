@@ -35,7 +35,7 @@ class MinerAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('data', type=dict, location='json')
-        super(MjolnirAPI, self).__init__()
+        super(MinerAPI, self).__init__()
 
     def post(self):
         args = self.reqparse.parse_args()
