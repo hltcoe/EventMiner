@@ -41,6 +41,7 @@ def process(data):
                 tag = e[1]
                 score = e[2]
                 new_ents.append((r, tag, score))
+            data['sents'][sid]['tokens'] = tokens
             data['ner_info'][sid] = new_ents
         except Exception as e:
             # If something goes wrong, log it and return nothing

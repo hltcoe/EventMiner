@@ -30,7 +30,7 @@ class RabbitClient(object):
 def prep_data(data):
     sent_detector = nltk.data.load('tokenizers/punkt/english.pickle')
     sents = sent_detector.tokenize(data['content'].strip())
-    sent_dict = {str(uuid.uuid4()): x for x in sents[:2]}
+    sent_dict = {str(uuid.uuid4()): {'text': x} for x in sents[:2]}
     data['sents'] = sent_dict
 
     return data
