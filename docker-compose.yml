@@ -19,6 +19,13 @@ services:
       - rabbitmq
     networks:
       - miner
+  predpatt:
+    image: predpatt 
+    build: ./predpatt
+    depends_on:
+      - rabbitmq
+    networks:
+      - miner
   relevancy:
     image: relevancy
     build: ./relevancy
