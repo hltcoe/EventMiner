@@ -18,13 +18,20 @@ end user.
 Services
 ---------
 
-The services defined in this project are as follows:
+The services defined in this project are as follows (in the order they process
+content):
 
-* `mitie` - Provide NER tagging via [MITIE](https://github.com/mit-nlp/MITIE).
-* `relevancy` - An SVM classifier to determine story relevancy based on the story title.
-* `quad` - A convolutional neural net to classify a sentence into one of four `QuadCategories`: verbal conflict, verbal cooperation, material conflict, material cooperation.
-* `hypnos` - Rule-based event extractor. Used primarily for actor extraction in this setup.
-* `collector` - Light process to pull in events and write them out to a file.
+1. `mitie` - Provide NER tagging via [MITIE](https://github.com/mit-nlp/MITIE).
+2. `predpatt` - Extract predicate-argument structures using
+ [PredPatt](https://github.com/hltcoe/PredPatt). Also includes Universal
+ Dependency parse provided by
+ [SyntaxNet/DRAGNN](https://github.com/tensorflow/models/tree/master/syntaxnet).
+3. `relevancy` - An SVM classifier to determine story relevancy based on the story title.
+  * **Note:** Branching occurs at the `relevancy` classifier. If this model
+  determines a story is not relevant, no further processing occurs.
+4. `quad` - A convolutional neural net to classify a sentence into one of four `QuadCategories`: verbal conflict, verbal cooperation, material conflict, material cooperation.
+5. `hypnos` - Rule-based event extractor. Used primarily for actor extraction in this setup.
+6. `collector` - Light process to pull in events and write them out to a file.
 
 Deployment
 ----------

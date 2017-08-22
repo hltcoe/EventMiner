@@ -3,35 +3,40 @@ import time
 import utils
 import logging
 
+import ParseyPredFace
+
+
 logging.basicConfig(format='%(levelname)s %(asctime)s %(filename)s %(lineno)d: %(message)s')
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
 def callback(ch, method, properties, body):
-    global TFIDF, CLF
     data = json.loads(body)
     logger.info('Started processing content. {}'.format(data['pipeline_key']))
 
-    process(data, TFIDF, CLF)
+    process(data)
 
-    logger.info('Finished tagging relevancy. {}'.format(data['pipeline_key']))
+    logger.info('Finished PP extraction. {}'.format(data['pipeline_key']))
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
-def process(data, tfidf, clf):
-    publish = 'relevancy'
+def process(data):
+    publish = 'predpatt'
     rabbit_publish = utils.RabbitClient(queue=publish,
                                         host='rabbitmq')
-    try:
-        mat = tfidf.transform([data['title']])
-        pred = clf.predict(mat)
-        data['predicted_relevancy'] = pred[0]
-        logger.info('Finished processing content.')
-    except Exception as e:
-        # If something goes wrong, log it and return nothing
-        logger.info(e)
-        # Make sure to update this line if you change the variable names
+    data['predicate_info'] = {}
+    for sid, sent in data['sents'].iteritems():
+        try:
+            output = ParseyPredFace.parse(sent)
+
+            data['predicate_info'][sid] = output
+        except Exception as e:
+            # If something goes wrong, log it and return nothing
+            logger.info(e)
+            # Make sure to update this line if you change the variable names
+
+    logger.info('Finished processing content.')
 
     rabbit_publish.send(data, publish)
 
@@ -41,7 +46,7 @@ def main():
     time.sleep(30)
     logger.info('... done ...')
 
-    consume = 'predpatt'
+    consume = 'mitie'
     rabbit_consume = utils.RabbitClient(queue=consume,
                                         host='rabbitmq')
 
@@ -49,8 +54,5 @@ def main():
 
 
 if __name__ == '__main__':
-    args = utils.parse_arguments()
-    logger.info('Loading model...')
-    CLF, TFIDF = utils.load_model(args)
     logger.info('Running...')
     main()
