@@ -28,7 +28,7 @@ def process(data):
     data['predicate_info'] = {}
     for sid, sent in data['sents'].iteritems():
         try:
-            output = ParseyPredFace.parse(text)
+            output = ParseyPredFace.parse(sent)
 
             data['predicate_info'][sid] = output
         except Exception as e:
