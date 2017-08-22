@@ -21,6 +21,10 @@ Services
 The services defined in this project are as follows:
 
 * `mitie` - Provide NER tagging via [MITIE](https://github.com/mit-nlp/MITIE).
+* `predpatt` - Extract predicate-argument structures using
+ [PredPatt](https://github.com/hltcoe/PredPatt). Also includes Universal
+ Dependency parse provided by
+ [SyntaxNet/DRAGNN](https://github.com/tensorflow/models/tree/master/syntaxnet).
 * `relevancy` - An SVM classifier to determine story relevancy based on the story title.
 * `quad` - A convolutional neural net to classify a sentence into one of four `QuadCategories`: verbal conflict, verbal cooperation, material conflict, material cooperation.
 * `hypnos` - Rule-based event extractor. Used primarily for actor extraction in this setup.
