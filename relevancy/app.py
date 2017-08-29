@@ -1,3 +1,4 @@
+import os
 import json
 import time
 import utils
@@ -6,6 +7,9 @@ import logging
 logging.basicConfig(format='%(levelname)s %(asctime)s %(filename)s %(lineno)d: %(message)s')
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
+CONSUME = os.getenv('CONSUME')
+PUBLISH = os.getenv('PUBLISH')
 
 
 def callback(ch, method, properties, body):
@@ -20,8 +24,7 @@ def callback(ch, method, properties, body):
 
 
 def process(data, tfidf, clf):
-    publish = 'relevancy'
-    rabbit_publish = utils.RabbitClient(queue=publish,
+    rabbit_publish = utils.RabbitClient(queue=PUBLISH,
                                         host='rabbitmq')
     try:
         mat = tfidf.transform([data['title']])
@@ -33,7 +36,7 @@ def process(data, tfidf, clf):
         logger.info(e)
         # Make sure to update this line if you change the variable names
 
-    rabbit_publish.send(data, publish)
+    rabbit_publish.send(data, PUBLISH)
 
 
 def main():
@@ -41,8 +44,7 @@ def main():
     time.sleep(30)
     logger.info('... done ...')
 
-    consume = 'predpatt'
-    rabbit_consume = utils.RabbitClient(queue=consume,
+    rabbit_consume = utils.RabbitClient(queue=CONSUME,
                                         host='rabbitmq')
 
     rabbit_consume.receive(callback)

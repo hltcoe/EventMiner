@@ -1,3 +1,4 @@
+import os
 import json
 import time
 import utils
@@ -9,6 +10,8 @@ logger.setLevel(logging.INFO)
 
 
 MAXLEN = 1400
+CONSUME = os.getenv('CONSUME')
+PUBLISH = os.getenv('PUBLISH')
 
 
 def callback(ch, method, properties, body):
@@ -27,8 +30,7 @@ def callback(ch, method, properties, body):
 
 
 def process(data, model, vocab, vocab_size, check):
-    publish = 'quad'
-    rabbit_publish = utils.RabbitClient(queue=publish,
+    rabbit_publish = utils.RabbitClient(queue=PUBLISH,
                                         host='rabbitmq')
 
     sents = data['sents']
@@ -37,7 +39,7 @@ def process(data, model, vocab, vocab_size, check):
         try:
             logger.info('Processing sent {} for content {}'.format(sid,
                                                                    data['pipeline_key']))
-            mat = utils.encode_data([sent], MAXLEN, vocab, vocab_size, check)
+            mat = utils.encode_data([sent['text']], MAXLEN, vocab, vocab_size, check)
             pred = model.predict(mat)
             pred_class = pred.argmax(1)[0]
             pred_score = pred[0][pred_class]
@@ -49,9 +51,10 @@ def process(data, model, vocab, vocab_size, check):
             # If something goes wrong, log it and return nothing
             logger.info(e)
             # Make sure to update this line if you change the variable names
+            data['event_info'][sid] = {}
             data['event_info'][sid]['predicted_class'] = {}
 
-    rabbit_publish.send(data, publish)
+    rabbit_publish.send(data, PUBLISH)
 
 
 def main():
@@ -59,8 +62,7 @@ def main():
     time.sleep(30)
     logger.info('... done ...')
 
-    consume = 'relevancy'
-    rabbit_consume = utils.RabbitClient(queue=consume,
+    rabbit_consume = utils.RabbitClient(queue=CONSUME,
                                         host='rabbitmq')
 
     rabbit_consume.receive(callback)

@@ -13,6 +13,8 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 cwd = os.path.abspath(os.path.dirname(__file__))
+CONSUME = os.getenv('CONSUME')
+PUBLISH = os.getenv('PUBLISH')
 
 
 def callback(ch, method, properties, body):
@@ -26,8 +28,7 @@ def callback(ch, method, properties, body):
 
 
 def extract(message):
-    publish = 'actors'
-    rabbit_publish = utils.RabbitClient(queue=publish,
+    rabbit_publish = utils.RabbitClient(queue=PUBLISH,
                                         host='rabbitmq')
 
     story = message
@@ -36,7 +37,7 @@ def extract(message):
     #keys = [k for k in keys if k != 'predicted_relevancy']
     for val in keys:
         logger.info('Processing {}'.format(val))
-        text = story['event_info'][val]['sent']
+        text = story['event_info'][val]['sent']['text']
         text = text.encode('utf-8')
 
         event_dict = send_to_corenlp(story, text)
@@ -63,7 +64,7 @@ def extract(message):
             logger.info('Something went wrong in the formatting. {}\n'.format(e))
             pass
 
-    rabbit_publish.send(story, publish)
+    rabbit_publish.send(story, PUBLISH)
 
 
 def send_to_petr(event_dict):
@@ -130,8 +131,7 @@ def main():
     time.sleep(60)
     logger.info('... done ...')
 
-    consume = 'quad'
-    rabbit_consume = utils.RabbitClient(queue=consume,
+    rabbit_consume = utils.RabbitClient(queue=CONSUME,
                                         host='rabbitmq')
 
     rabbit_consume.receive(callback)

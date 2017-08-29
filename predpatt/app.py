@@ -1,3 +1,4 @@
+import os
 import json
 import time
 import utils
@@ -11,6 +12,10 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
+CONSUME = os.getenv('CONSUME')
+PUBLISH = os.getenv('PUBLISH')
+
+
 def callback(ch, method, properties, body):
     data = json.loads(body)
     logger.info('Started processing content. {}'.format(data['pipeline_key']))
@@ -22,13 +27,12 @@ def callback(ch, method, properties, body):
 
 
 def process(data):
-    publish = 'predpatt'
-    rabbit_publish = utils.RabbitClient(queue=publish,
+    rabbit_publish = utils.RabbitClient(queue=PUBLISH,
                                         host='rabbitmq')
     data['predicate_info'] = {}
     for sid, sent in data['sents'].iteritems():
         try:
-            output = ParseyPredFace.parse(sent)
+            output = ParseyPredFace.parse(sent['text'])
 
             data['predicate_info'][sid] = output
         except Exception as e:
@@ -38,7 +42,7 @@ def process(data):
 
     logger.info('Finished processing content.')
 
-    rabbit_publish.send(data, publish)
+    rabbit_publish.send(data, PUBLISH)
 
 
 def main():
@@ -46,8 +50,7 @@ def main():
     time.sleep(30)
     logger.info('... done ...')
 
-    consume = 'mitie'
-    rabbit_consume = utils.RabbitClient(queue=consume,
+    rabbit_consume = utils.RabbitClient(queue=CONSUME,
                                         host='rabbitmq')
 
     rabbit_consume.receive(callback)
