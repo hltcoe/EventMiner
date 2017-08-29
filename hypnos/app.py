@@ -37,7 +37,7 @@ def extract(message):
     #keys = [k for k in keys if k != 'predicted_relevancy']
     for val in keys:
         logger.info('Processing {}'.format(val))
-        text = story['event_info'][val]['sent']
+        text = story['event_info'][val]['sent']['text']
         text = text.encode('utf-8')
 
         event_dict = send_to_corenlp(story, text)

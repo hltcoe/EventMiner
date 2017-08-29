@@ -14,23 +14,23 @@ services:
       - PUBLISH=ingest
     networks:
       - miner
-  mitie:
-    image: mitie
-    build: ./mitie
-    depends_on:
-      - rabbitmq
-    environment:
-      - CONSUME=ingest
-      - PUBLISH=mitie
-    networks:
-      - miner
+#  mitie:
+#    image: mitie
+#    build: ./mitie
+#    depends_on:
+#      - rabbitmq
+#    environment:
+#      - CONSUME=ingest
+#      - PUBLISH=mitie
+#    networks:
+#      - miner
   predpatt:
     image: predpatt 
     build: ./predpatt
     depends_on:
       - rabbitmq
     environment:
-      - CONSUME=mitie
+      - CONSUME=ingest
       - PUBLISH=predpatt
     networks:
       - miner

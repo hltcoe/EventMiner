@@ -33,7 +33,8 @@ def process(data):
     data['ner_info'] = {}
     for sid, sent in data['sents'].iteritems():
         try:
-            tokens = tokenize(sent)
+            print(sent)
+            tokens = tokenize(sent['text'])
             entities = NER.extract_entities(tokens)
 
             new_ents = []

@@ -50,7 +50,7 @@ class MinerAPI(Resource):
         pipeline_key = str(uuid.uuid4())
         data['pipeline_key'] = pipeline_key
 
-        logger.info('Sending to the downstream...')
+        logger.info('Sending to the downstream with key {}...'.format(pipeline_key))
         rabbit.send(data, PUBLISH)
 
         logging.info('Sent {}'.format(pipeline_key))

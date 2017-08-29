@@ -39,7 +39,7 @@ def process(data, model, vocab, vocab_size, check):
         try:
             logger.info('Processing sent {} for content {}'.format(sid,
                                                                    data['pipeline_key']))
-            mat = utils.encode_data([sent], MAXLEN, vocab, vocab_size, check)
+            mat = utils.encode_data([sent['text']], MAXLEN, vocab, vocab_size, check)
             pred = model.predict(mat)
             pred_class = pred.argmax(1)[0]
             pred_score = pred[0][pred_class]
@@ -51,6 +51,7 @@ def process(data, model, vocab, vocab_size, check):
             # If something goes wrong, log it and return nothing
             logger.info(e)
             # Make sure to update this line if you change the variable names
+            data['event_info'][sid] = {}
             data['event_info'][sid]['predicted_class'] = {}
 
     rabbit_publish.send(data, PUBLISH)
