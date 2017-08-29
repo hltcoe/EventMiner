@@ -53,7 +53,7 @@ def process(data):
 
     logger.info('Finished processing content.')
 
-    rabbit_publish.send(data, publish)
+    rabbit_publish.send(data, PUBLISH)
 
 
 def main():

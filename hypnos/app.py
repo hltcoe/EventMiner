@@ -64,7 +64,7 @@ def extract(message):
             logger.info('Something went wrong in the formatting. {}\n'.format(e))
             pass
 
-    rabbit_publish.send(story, publish)
+    rabbit_publish.send(story, PUBLISH)
 
 
 def send_to_petr(event_dict):

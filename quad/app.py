@@ -53,7 +53,7 @@ def process(data, model, vocab, vocab_size, check):
             # Make sure to update this line if you change the variable names
             data['event_info'][sid]['predicted_class'] = {}
 
-    rabbit_publish.send(data, publish)
+    rabbit_publish.send(data, PUBLISH)
 
 
 def main():
