@@ -8,6 +8,8 @@ logging.basicConfig(format='%(levelname)s %(asctime)s %(filename)s %(lineno)d: %
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+CONSUME = os.getenv('CONSUME')
+
 
 def callback(ch, method, properties, body):
     data = json.loads(body)
@@ -37,8 +39,7 @@ def main():
     time.sleep(30)
     logger.info('... done ...')
 
-    consume = 'actors'
-    rabbit_consume = utils.RabbitClient(queue=consume,
+    rabbit_consume = utils.RabbitClient(queue=CONSUME,
                                         host='rabbitmq')
 
     rabbit_consume.receive(callback)

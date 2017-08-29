@@ -8,6 +8,9 @@ services:
     build: .
     ports:
         - "5002:5002"
+    environment:
+      - CONSUME=quad
+      - PUBLISH=actors
     networks:
         - eventminer_miner
   ccnlp:

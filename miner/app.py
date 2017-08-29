@@ -20,6 +20,8 @@ api = Api(app)
 
 cwd = os.path.abspath(os.path.dirname(__file__))
 
+PUBLISH = os.getenv('PUBLISH')
+
 
 @app.errorhandler(400)
 def bad_request(error):
@@ -39,9 +41,8 @@ class MinerAPI(Resource):
 
     def post(self):
         args = self.reqparse.parse_args()
-        message_route = 'ingest'
 
-        rabbit = utils.RabbitClient(queue=message_route, host='rabbitmq')
+        rabbit = utils.RabbitClient(queue=PUBLISH, host='rabbitmq')
 
         logger.info('Received data...')
         data = args['data']

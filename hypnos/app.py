@@ -13,6 +13,8 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 cwd = os.path.abspath(os.path.dirname(__file__))
+CONSUME = os.getenv('CONSUME')
+PUBLISH = os.getenv('PUBLISH')
 
 
 def callback(ch, method, properties, body):
@@ -26,8 +28,7 @@ def callback(ch, method, properties, body):
 
 
 def extract(message):
-    publish = 'actors'
-    rabbit_publish = utils.RabbitClient(queue=publish,
+    rabbit_publish = utils.RabbitClient(queue=PUBLISH,
                                         host='rabbitmq')
 
     story = message
@@ -130,8 +131,7 @@ def main():
     time.sleep(60)
     logger.info('... done ...')
 
-    consume = 'quad'
-    rabbit_consume = utils.RabbitClient(queue=consume,
+    rabbit_consume = utils.RabbitClient(queue=CONSUME,
                                         host='rabbitmq')
 
     rabbit_consume.receive(callback)

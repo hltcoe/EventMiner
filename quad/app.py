@@ -9,6 +9,8 @@ logger.setLevel(logging.INFO)
 
 
 MAXLEN = 1400
+CONSUME = os.getenv('CONSUME')
+PUBLISH = os.getenv('PUBLISH')
 
 
 def callback(ch, method, properties, body):
@@ -27,8 +29,7 @@ def callback(ch, method, properties, body):
 
 
 def process(data, model, vocab, vocab_size, check):
-    publish = 'quad'
-    rabbit_publish = utils.RabbitClient(queue=publish,
+    rabbit_publish = utils.RabbitClient(queue=PUBLISH,
                                         host='rabbitmq')
 
     sents = data['sents']
@@ -59,8 +60,7 @@ def main():
     time.sleep(30)
     logger.info('... done ...')
 
-    consume = 'relevancy'
-    rabbit_consume = utils.RabbitClient(queue=consume,
+    rabbit_consume = utils.RabbitClient(queue=CONSUME,
                                         host='rabbitmq')
 
     rabbit_consume.receive(callback)

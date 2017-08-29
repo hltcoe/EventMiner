@@ -10,6 +10,8 @@ services:
       - rabbitmq
     ports:
       - "6000:6000"
+    environment:
+      - PUBLISH=ingest
     networks:
       - miner
   mitie:
@@ -17,6 +19,9 @@ services:
     build: ./mitie
     depends_on:
       - rabbitmq
+    environment:
+      - CONSUME=ingest
+      - PUBLISH=mitie
     networks:
       - miner
   predpatt:
@@ -24,6 +29,9 @@ services:
     build: ./predpatt
     depends_on:
       - rabbitmq
+    environment:
+      - CONSUME=mitie
+      - PUBLISH=predpatt
     networks:
       - miner
   relevancy:
@@ -31,6 +39,9 @@ services:
     build: ./relevancy
     depends_on:
       - rabbitmq
+    environment:
+      - CONSUME=predpatt
+      - PUBLISH=relevancy
     networks:
       - miner
   quad:
@@ -38,6 +49,9 @@ services:
     build: ./quad
     depends_on:
       - rabbitmq
+    environment:
+      - CONSUME=relevancy
+      - PUBLISH=quad
     networks:
       - miner
   collector:
@@ -45,6 +59,8 @@ services:
     build: ./collector
     depends_on:
       - rabbitmq
+    environment:
+      - CONSUME=actors
     networks:
       - miner
     volumes:

@@ -7,6 +7,9 @@ logging.basicConfig(format='%(levelname)s %(asctime)s %(filename)s %(lineno)d: %
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+CONSUME = os.getenv('CONSUME')
+PUBLISH = os.getenv('PUBLISH')
+
 
 def callback(ch, method, properties, body):
     global TFIDF, CLF
@@ -20,8 +23,7 @@ def callback(ch, method, properties, body):
 
 
 def process(data, tfidf, clf):
-    publish = 'relevancy'
-    rabbit_publish = utils.RabbitClient(queue=publish,
+    rabbit_publish = utils.RabbitClient(queue=PUBLISH,
                                         host='rabbitmq')
     try:
         mat = tfidf.transform([data['title']])
@@ -41,8 +43,7 @@ def main():
     time.sleep(30)
     logger.info('... done ...')
 
-    consume = 'predpatt'
-    rabbit_consume = utils.RabbitClient(queue=consume,
+    rabbit_consume = utils.RabbitClient(queue=CONSUME,
                                         host='rabbitmq')
 
     rabbit_consume.receive(callback)

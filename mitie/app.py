@@ -1,3 +1,4 @@
+import os
 import json
 import time
 import utils
@@ -12,6 +13,9 @@ logger.setLevel(logging.INFO)
 
 NER = named_entity_extractor('MITIE-models/english/ner_model.dat')
 
+CONSUME = os.getenv('CONSUME')
+PUBLISH = os.getenv('PUBLISH')
+
 
 def callback(ch, method, properties, body):
     data = json.loads(body)
@@ -24,8 +28,7 @@ def callback(ch, method, properties, body):
 
 
 def process(data):
-    publish = 'mitie'
-    rabbit_publish = utils.RabbitClient(queue=publish,
+    rabbit_publish = utils.RabbitClient(queue=PUBLISH,
                                         host='rabbitmq')
     data['ner_info'] = {}
     for sid, sent in data['sents'].iteritems():
@@ -58,8 +61,7 @@ def main():
     time.sleep(30)
     logger.info('... done ...')
 
-    consume = 'ingest'
-    rabbit_consume = utils.RabbitClient(queue=consume,
+    rabbit_consume = utils.RabbitClient(queue=CONSUME,
                                         host='rabbitmq')
 
     rabbit_consume.receive(callback)
