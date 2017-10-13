@@ -96,9 +96,10 @@ def get_ud_fragments(pp):
     Format of fragments is (governor_text, governor_position, relation,
     token_text, token_position)
     """
+    pred_deps = []
+    arg2deps = {}
     for predicate in pp.instances:
         # Get dep parses for the predicate.
-        pred_deps = []
         for token in predicate.tokens:
             # (head, relation, dependent)
             if token.gov:
@@ -109,7 +110,6 @@ def get_ud_fragments(pp):
             pred_deps.append(dep)
 
         # Get dep parses for the arguments.
-        arg2deps = {}
         for argument in predicate.arguments:
             arg_deps = []
             for token in argument.tokens:
