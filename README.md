@@ -27,8 +27,8 @@ content):
  Dependency parse provided by
  [SyntaxNet/DRAGNN](https://github.com/tensorflow/models/tree/master/syntaxnet).
 3. `relevancy` - An SVM classifier to determine story relevancy based on the story title.
-  * **Note:** Branching occurs at the `relevancy` classifier. If this model
-  determines a story is not relevant, no further processing occurs.
+  * **Note:** Branching occurs at the `relevancy` classifier.
+  If this model determines a story is not relevant, it isn't processed by `quad`, it just goes straight through to `hypnos`.
 4. `quad` - A convolutional neural net to classify a sentence into one of four `QuadCategories`: verbal conflict, verbal cooperation, material conflict, material cooperation.
 5. `hypnos` - Rule-based event extractor. Used primarily for actor extraction in this setup.
 6. `collector` - Light process to pull in events and write them out to a file.
