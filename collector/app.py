@@ -1,6 +1,5 @@
 import os
 import json
-import time
 import utils
 import logging
 import datetime
@@ -36,13 +35,7 @@ def process(data):
 
 
 def main():
-    logger.info('... waiting ...')
-    time.sleep(30)
-    logger.info('... done ...')
-
-    rabbit_consume = utils.RabbitClient(queue=CONSUME,
-                                        host='rabbitmq')
-
+    rabbit_consume = utils.RabbitClient(queue=CONSUME, host='rabbitmq')
     rabbit_consume.receive(callback)
 
 
