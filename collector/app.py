@@ -1,6 +1,5 @@
 import os
 import json
-import time
 import utils
 import logging
 import datetime
@@ -24,25 +23,29 @@ def callback(ch, method, properties, body):
 
 
 def process(data):
+    key = '<unknown>'
     try:
-        now = datetime.datetime.utcnow().strftime('%Y%m%d')
-        filename = '/src/data/events.{}.txt'.format(now)
-        with open(filename, 'a+') as f:
-            f.write(json.dumps(data) + '\n')
-    except Exception as e:
+        key = data['pipeline_key']
+        logger.info('Got results for {}'.format(key))
+
+        root = '/src/data/'
+        now = datetime.datetime.utcnow().strftime('%Y/%m/%d')
+        path = os.path.join(root, now)
+
+        if not os.path.exists(path):
+            os.makedirs(path)
+
+        fname = '{}.json'.format(key)
+        with open(os.path.join(path, fname), 'w') as f:
+            f.write(json.dumps(data))
+    except:
         # If something goes wrong, log it and return nothing
-        logger.info(e)
+        logger.exception('Failed to write results for {}'.format(key))
         # Make sure to update this line if you change the variable names
 
 
 def main():
-    logger.info('... waiting ...')
-    time.sleep(30)
-    logger.info('... done ...')
-
-    rabbit_consume = utils.RabbitClient(queue=CONSUME,
-                                        host='rabbitmq')
-
+    rabbit_consume = utils.RabbitClient(queue=CONSUME, host='rabbitmq')
     rabbit_consume.receive(callback)
 
 

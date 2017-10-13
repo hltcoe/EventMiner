@@ -1,10 +1,12 @@
 import json
 import logging
 import os
-import time
 import utils
 
-logging.basicConfig(format='%(levelname)s %(asctime)s %(filename)s %(lineno)d: %(message)s')
+logging.basicConfig(format='%(levelname)s %(asc
+                   
+                   
+                   )s %(filename)s %(lineno)d: %(message)s')
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
@@ -64,13 +66,7 @@ def publish(data):
 
 
 def main():
-    logger.info('... waiting ...')
-    time.sleep(30)
-    logger.info('... done ...')
-
-    rabbit_consume = utils.RabbitClient(queue=CONSUME,
-                                        host='rabbitmq')
-
+    rabbit_consume = utils.RabbitClient(queue=CONSUME, host='rabbitmq')
     rabbit_consume.receive(callback)
 
 

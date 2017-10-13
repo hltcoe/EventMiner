@@ -2,7 +2,7 @@ FROM continuumio/anaconda
 
 MAINTAINER John Beieler <jbeieler1@jhu.edu>
 
-RUN apt-get install -y unzip
+RUN apt-get install -y unzip netcat
 
 ADD . /src
 

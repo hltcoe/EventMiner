@@ -36,19 +36,19 @@ class CodeAPI(Resource):
     def post(self):
         args = self.reqparse.parse_args()
         event_dict = args['events']
+        to_return = []
 
         try:
             event_dict_updated = petrarch2.do_coding(event_dict)
             k = event_dict_updated.keys()[0]
             try:
                 to_return = event_dict_updated[k]['sents']['0']['events']
-            except Exception as e:
-                logger.warning("An error occured. {}".format(e))
-                to_return = []
-        except Exception as e:
-            logger.warning("An error occurred with PETR. {}\n".format(e))
-            event_dict_updated = event_dict
-            to_return = []
+            except KeyError:
+                logger.info('No events to process')
+            except:
+                logger.exception("An error occured")
+        except:
+            logger.exception("An error occurred")
 
         return to_return
 

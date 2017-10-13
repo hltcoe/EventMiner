@@ -1,5 +1,4 @@
 import os
-import time
 import json
 import utils
 import logging
@@ -59,10 +58,9 @@ def extract(message):
                     pass
 
             #logger.info(json.dumps(story))
-        except Exception as e:
+        except:
+            logger.exception('Something went wrong in the formatting.')
             logger.info(json.dumps(events_r.json()))
-            logger.info('Something went wrong in the formatting. {}\n'.format(e))
-            pass
 
     rabbit_publish.send(story, PUBLISH)
 
@@ -79,12 +77,13 @@ def send_to_petr(event_dict):
 
 def send_to_corenlp(story, text):
     storyid = story['pipeline_key']
+    date = datetime.datetime.utcnow().strftime('%Y%m%d')  # set a default
     try:
-        date = story['date']
-        date = parse(date).strftime('%Y%m%d')
-    except Exception as e:
-        logger.info('Error occured with the date.')
-        date = datetime.datetime.utcnow().strftime('%Y%m%d')
+        date = parse(story['date']).strftime('%Y%m%d')
+    except KeyError:
+        logger.info('No date found')
+    except ValueError:
+        logger.info('Unable to parse date')
 
     headers = {'Content-Type': 'application/json'}
     core_data = json.dumps({'text': text})
@@ -127,13 +126,7 @@ def process_results(event_dict):
 
 
 def main():
-    logger.info('... waiting ...')
-    time.sleep(60)
-    logger.info('... done ...')
-
-    rabbit_consume = utils.RabbitClient(queue=CONSUME,
-                                        host='rabbitmq')
-
+    rabbit_consume = utils.RabbitClient(queue=CONSUME, host='rabbitmq')
     rabbit_consume.receive(callback)
 
 

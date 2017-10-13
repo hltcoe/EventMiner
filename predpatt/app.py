@@ -1,6 +1,5 @@
 import os
 import json
-import time
 import utils
 import logging
 
@@ -32,7 +31,7 @@ def process(data):
     data['predicate_info'] = {}
     for sid, sent in data['sents'].iteritems():
         try:
-            output = ParseyPredFace.parse(sent['text'])
+            output = ParseyPredFace.parse(sent['text'].encode('utf-8'))
 
             data['predicate_info'][sid] = output
         except Exception as e:
@@ -46,13 +45,7 @@ def process(data):
 
 
 def main():
-    logger.info('... waiting ...')
-    time.sleep(30)
-    logger.info('... done ...')
-
-    rabbit_consume = utils.RabbitClient(queue=CONSUME,
-                                        host='rabbitmq')
-
+    rabbit_consume = utils.RabbitClient(queue=CONSUME, host='rabbitmq')
     rabbit_consume.receive(callback)
 
 
