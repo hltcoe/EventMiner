@@ -30,7 +30,7 @@ services:
     depends_on:
       - rabbitmq
     environment:
-      - CONSUME=ingest
+      - CONSUME=mitie
       - PUBLISH=predpatt
     networks:
       - miner
