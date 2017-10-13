@@ -1,5 +1,4 @@
 import os
-import time
 import json
 import utils
 import logging
@@ -127,13 +126,7 @@ def process_results(event_dict):
 
 
 def main():
-    logger.info('... waiting ...')
-    time.sleep(60)
-    logger.info('... done ...')
-
-    rabbit_consume = utils.RabbitClient(queue=CONSUME,
-                                        host='rabbitmq')
-
+    rabbit_consume = utils.RabbitClient(queue=CONSUME, host='rabbitmq')
     rabbit_consume.receive(callback)
 
 

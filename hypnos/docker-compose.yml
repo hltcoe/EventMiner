@@ -6,8 +6,6 @@ services:
   hypnos:
     image: hypnos
     build: .
-    ports:
-        - "5002:5002"
     environment:
       - CONSUME=quad
       - PUBLISH=actors
