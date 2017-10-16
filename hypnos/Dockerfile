@@ -8,4 +8,4 @@ ADD . /src
 
 RUN cd /src; pip install -r requirements.txt
 
-CMD ["python", "/src/app.py"]
+CMD ["/src/wait-for", "ccnlp:5000", "-t", "60", "--", "python", "/src/app.py"]

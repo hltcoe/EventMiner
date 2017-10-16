@@ -16,4 +16,4 @@ RUN pip install -r requirements.txt
 
 EXPOSE 6000
 
-CMD ["python", "/src/app.py"]
+CMD ["/src/wait-for", "rabbitmq:5672", "--", "python", "/src/app.py"]
