@@ -1,6 +1,5 @@
 import os
-import json
-import uuid
+import hashlib
 import utils
 import logging
 
@@ -45,16 +44,15 @@ class MinerAPI(Resource):
         rabbit = utils.RabbitClient(queue=PUBLISH, host='rabbitmq')
 
         logger.info('Received data...')
-        data = args['data']
-        data = utils.prep_data(data)
-        pipeline_key = str(uuid.uuid4())
-        data['pipeline_key'] = pipeline_key
+        data = utils.prep_data(args['data'])
+        key = hashlib.sha1(''.join(data['sents'])).hexdigest()
+        data['pipeline_key'] = key
 
-        logger.info('Sending to the downstream with key {}...'.format(pipeline_key))
+        logger.info('Sending downstream with key {}...'.format(key))
         rabbit.send(data, PUBLISH)
 
-        logging.info('Sent {}'.format(pipeline_key))
-        return pipeline_key
+        logging.info('Sent {}'.format(key))
+        return key
 
 
 api.add_resource(MinerAPI, '/EventMiner')
